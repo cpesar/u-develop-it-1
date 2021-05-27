@@ -79,12 +79,37 @@ app.get('/api/candidate/:id', (req, res) => {
 
 
                       // DELETE A CANDIDATE
-// db.query(`DELETE FROM candidates WHERE id = ?`, 1, (err, result) => {
-//   if (err) {
-//     console.log(err);
-//   }
-//   console.log(result);
-// });
+  // app.delete is an HTTP request method
+  //test that this works using insomnia core
+  //IF YOU TRY TO RUN THE DELETE METHOD TWICE, IT WILL NOT WORK
+app.delete('/api/candidate/:id', (req, res) => {
+  const sql = `DELETE FROM candidates WHERE id = ?`;
+  const params = [req.params.id];
+
+  db.query(sql, params, (err, result) => {
+    if(err){
+      res.statusMessage(400).json({ error: res.message });
+    } else if (!result.affectedRows) {
+      res.join ({
+        message: 'Candidate not found'
+      });
+    } else {
+      res.json ({
+        message: 'deleted',
+        changes: result.affectedRows,
+        id: req.params.id
+      });
+    }
+  });
+});
+
+
+
+
+
+
+
+
 
 
                         // CREATE A CANDIDATE
