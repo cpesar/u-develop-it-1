@@ -26,18 +26,55 @@ const db = mysql.createConnection(
   console.log('Connected to the election database.')
 );
 
-                  // RETURNS ALL CANDIDATES
-// db.query(`SELECT * FROM candidates`, (err, rows) => {
-//   console.log(rows);
-// });
 
-                    // GET A SINGLE CANDIDATE
-                    //insert where id = __
-db.query(`SELECT * FROM candidates WHERE id = 4`, (err, row) => {
-  if (err) {
-    console.log(err);
-  }
-  console.log(row);
+
+
+
+
+            // GET ROUTE- RETURNS ALL CANDIDATES
+            // /api/candidates = endpoint
+app.get('/api/candidates', (req, res) => {
+  const sql = `SELECT * FROM candidates`;
+
+  db.query(sql, (err, rows) => {
+    if(err) {
+      // instead of logging the error, we'll send a 500 code (server error)
+      // place the error msg in a JSON object
+      res.status(500).json({ error: err.message });
+      return;
+    }
+      // if there is no error, error is null
+      // and the response is sent back using the following statement:
+    res.json({
+      message: 'success',
+      data: rows
+    });
+  });
+});
+
+
+
+
+
+            // GET ROUTE FOR A SINGLE CANDIDATE
+      // the endpoint (/api/candidate), now has an id to specify which candidate we'll get from the database
+app.get('/api/candidate/:id', (req, res) => {
+  const sql = `SELECT * FROM candidates WHERE id = ?`;
+  //params is assigned as an array with a single element (req.params.id)
+  const params = [req.params.id];
+
+  //the database call will query the candidates table with this id and retrieve the specified row
+  db.query(sql, params, (err, row) => {
+    if (err){
+      //400 error indicates a user request error
+      res.status(400).json({ error: err.message });
+      return;
+    }
+    res.json ({
+      message: 'success',
+      data: row
+    });
+  });
 });
 
 
@@ -52,16 +89,16 @@ db.query(`SELECT * FROM candidates WHERE id = 4`, (err, row) => {
 
                         // CREATE A CANDIDATE
       // The PRIMARY KEY constraint protects the table from creating duplicate id's
-const sql = `INSERT INTO candidates (id, first_name, last_name, industry_connected) 
-              VALUES (?,?,?,?)`;
-const params = [1, 'Ronald', 'Firbank', 1];
+// const sql = `INSERT INTO candidates (id, first_name, last_name, industry_connected) 
+//               VALUES (?,?,?,?)`;
+// const params = [1, 'Ronald', 'Firbank', 1];
 
-db.query(sql, params, (err, result) => {
-  if (err) {
-    console.log(err);
-  }
-  console.log(result);
-});
+// db.query(sql, params, (err, result) => {
+//   if (err) {
+//     console.log(err);
+//   }
+//   console.log(result);
+// });
 
 
           // Default response for any other request (Not Found)
