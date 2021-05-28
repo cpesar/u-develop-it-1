@@ -5,7 +5,8 @@ const inputCheck = require('../../utils/inputCheck');
 
 
 
-          //get route for ALL voters
+          //GET ROUTE FOR ALL VOTERS
+          //alphabetized by last_name
 router.get('/voters', (req, res) => {
   //built in sql sort method
   //this will ORDER by clause(last_name)
@@ -44,6 +45,7 @@ router.get('/voter/:id', (req, res) => {
 
                   //POST Route
       //Allows people to register via the app
+              //create a voter
 router.post('/voter', ({ body }, res) => {
   // Data validation, prevents blank records
   const errors = inputCheck(body, 'first_name', 'last_name', 'email');
