@@ -1,4 +1,6 @@
 -- this will drop/delete the tables every time you run the schema.sql file, ensuring you start with a clean slate
+-- tables must be dropped in a specific order
+DROP TABLE IF EXISTS votes;
 DROP TABLE IF EXISTS candidates;
 DROP TABLE IF EXISTS parties;
 DROP TABLE IF EXISTS voters;
@@ -42,4 +44,20 @@ CREATE TABLE voters (
   last_name VARCHAR(30) NOT NULL,
   email VARCHAR(50) NOT NULL,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+
+
+-- create votes table
+CREATE TABLE votes (
+  id INTEGER AUTO_INCREMENT PRIMARY KEY,
+  voter_id INTEGER NOT NULL,
+  candidate_id INTEGER NOT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    -- the values inserted into the voter_id must be unique
+    -- example- whoever has a voter_id of 1 can only appear once
+  CONSTRAINT uc_voter UNIQUE (voter_id),
+  -- ON DELETE CASCADE will also delete the entire row from the table
+  CONSTRAINT fk_voter FOREIGN KEY (voter_id) REFERENCES voters(id) ON DELETE CASCADE,
+  CONSTRAINT fk_candidate FOREIGN KEY (candidate_id) REFERENCES candidates(id) ON DELETE CASCADE
 );
