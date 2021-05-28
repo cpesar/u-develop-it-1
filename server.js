@@ -37,7 +37,12 @@ const db = mysql.createConnection(
             // GET ROUTE- RETURNS ALL CANDIDATES
             // /api/candidates = endpoint
 app.get('/api/candidates', (req, res) => {
-  const sql = `SELECT * FROM candidates`;
+        //route to join adding the party name
+  const sql = `SELECT candidates.*, parties.name
+               AS party_name
+               FROM candidates
+               LEFT JOIN parties
+               ON candidates.party_id = parties.id`;
 
   db.query(sql, (err, rows) => {
     if(err) {
@@ -62,7 +67,13 @@ app.get('/api/candidates', (req, res) => {
             // GET ROUTE FOR A SINGLE CANDIDATE
       // the endpoint (/api/candidate), now has an id to specify which candidate we'll get from the database
 app.get('/api/candidate/:id', (req, res) => {
-  const sql = `SELECT * FROM candidates WHERE id = ?`;
+          //route to join adding the party name
+  const sql = `SELECT candidates.*, parties.name
+               AS party_name
+               FROM candidates
+               LEFT JOIN parties
+               ON candidates.party_id = parties.id
+               WHERE candidates.id = ?`;
   //params is assigned as an array with a single element (req.params.id)
   const params = [req.params.id];
 
