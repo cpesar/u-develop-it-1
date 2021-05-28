@@ -63,3 +63,6 @@ router.delete('/party/:id', (req, res) => {
   });
 });
                   
+
+//export the router object
+module.exports = router;
